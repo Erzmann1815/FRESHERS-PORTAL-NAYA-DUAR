@@ -4021,30 +4021,10 @@
         }
 
         try {
-          const response = await fetch('/api/verify-student', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: student.name,
-              roll: student.roll,
-              registrationNo: student.registrationNo,
-              email: student.email
-            })
-          });
-          const result = await response.json();
-          if (response.ok && result.valid) {
-            this.showPaymentStep(evt, student);
-            return;
-          }
-          if (errorMessage) {
-            errorMessage.textContent = result.message || 'Name, roll number, registration number, and email ID do not match. Check all four details and try again.';
-            errorMessage.classList.remove('hidden');
-          }
-        } catch {
-          if (errorMessage) {
-            errorMessage.textContent = 'The private student-check server cannot be reached. Open this portal through the Node server at http://localhost:3000, not as a file or GitHub Pages. No registration was saved.';
-            errorMessage.classList.remove('hidden');
-          }
+        // BYPASS BACKEND: Directly approve the form without a server check
+        this.showPaymentStep(evt, student);
+        return;
+
         } finally {
           if (submitButton?.isConnected) {
             submitButton.disabled = false;
@@ -4088,78 +4068,65 @@
         if (!payBtn) return;
 
         payBtn.addEventListener('click', async () => {
-          payBtn.disabled = true;
-          try {
-            const orderResponse = await fetch('/api/payment/order', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ eventId: evt.id })
-            });
-            const order = await orderResponse.json();
-            if (!orderResponse.ok) throw new Error(order.message || 'Could not start Razorpay test checkout.');
-
+        payBtn.disabled = true;
+        try {
             const rzp = new window.Razorpay({
-              key: order.keyId,
-              amount: order.amount,
-              currency: order.currency,
-              order_id: order.id,
-              name: 'IIIT Kalyani Events',
-              description: evt.title,
-              theme: { color: '#d79a22' },
-              prefill: { name: student.name, email: student.email, contact: student.phone },
-              handler: async (payment) => {
-                try {
-                  const verifyResponse = await fetch('/api/payment/verify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      eventId: evt.id,
-                      orderId: payment.razorpay_order_id,
-                      paymentId: payment.razorpay_payment_id,
-                      signature: payment.razorpay_signature
-                    })
-                  });
-                  const verification = await verifyResponse.json();
-                  if (!verifyResponse.ok || !verification.valid) {
-                    throw new Error(verification.message || 'Payment could not be verified by the server.');
-                  }
+                key: 'rzp_test_TrO5UlzLnuazuK', // <-- Paste your public Razorpay Test Key ID here
+                amount: evt.price * 100 || 50000,
+                currency: 'INR',
+                name: 'IIT Kalyani Events',
+                description: evt.title,
+                theme: { color: '#d79a22' },
+                prefill: { 
+                    name: student.name, 
+                    email: student.email, 
+                    contact: student.phone || '' 
+                },
+                handler: async (payment) => {
+                    try {
+                        const newReg = {
+                            id: student.registrationNo,
+                            eventId: evt.id,
+                            eventTitle: evt.title,
+                            studentName: student.name,
+                            studentRoll: student.roll,
+                            paymentId: payment.razorpay_payment_id || `DEMO-${Date.now()}`,
+                            date: new Date().toLocaleDateString()
+                        };
 
-                  const newReg = {
-                    ...student,
-                    passId: `IIITK-PAID-${Math.floor(1000 + Math.random() * 9000)}`,
-                    feeAmount: evt.feeAmount,
-                    paymentStatus: 'paid',
-                    eventId: evt.id,
-                    eventTitle: evt.title,
-                    eventNum: evt.eventNum,
-                    when: evt.when,
-                    venue: evt.venue,
-                    registeredAt: new Date().toLocaleDateString()
-                  };
-                  this.registeredEvents.push(newReg);
-                  try {
-                    localStorage.setItem('iiitk_junior_registrations', JSON.stringify(this.registeredEvents));
-                  } catch (error) {
-                    console.warn('Could not save registration in this browser:', error);
-                  }
-                  this.showTicketConfirmation(newReg, evt);
-                  this.updateRegistrationBadge();
-                  this.renderEvents();
-                } catch (error) {
-                  alert(error.message || 'Payment verification failed. Contact the event team before retrying.');
+                        // Saves the registration directly to your script's native storage array
+                        if (Array.isArray(this.registrations)) {
+                            this.registrations.push(newReg);
+                            localStorage.setItem('my_registrations', JSON.stringify(this.registrations));
+                        }
+
+                        // Hides the active registration form modal panel
+                        const modal = document.getElementById('registration-modal');
+                        if (modal && typeof this.hideModal === 'function') {
+                            this.hideModal(modal);
+                        }
+
+                        // Instantly runs your app's built-in success screen logic visible on lines 4129+
+                        this.showTicketConfirmation(newReg, evt);
+                        alert("Registration Successful!");
+
+                    } catch (handlerError) {
+                        console.error("Error creating local pass ticket:", handlerError);
+                    } finally {
+                        if (payBtn.isConnected) payBtn.disabled = false;
+                    }
                 }
-              }
             });
-            rzp.on('payment.failed', (payment) => {
-              alert(`Payment failed: ${payment.error.description}`);
-            });
+
             rzp.open();
-          } catch (error) {
-            alert(error.message || 'Razorpay test checkout could not be started.');
-          } finally {
+
+        } catch (error) {
+            alert(error.message || 'Razorpay checkout could not be started.');
+        } finally {
             if (payBtn.isConnected) payBtn.disabled = false;
-          }
-        });
+        }
+    });
+
 
         container.querySelector('#btn-close-pending-payment')?.addEventListener('click', () => this.hideModal(modal));
       }
