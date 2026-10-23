@@ -1,0 +1,12 @@
+{
+  "name": "iiit-kalyani-juniors-portal",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "pdfjs-dist": "5.4.296"
+  }
+}
