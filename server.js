@@ -9,7 +9,7 @@ const projectDirectory = path.dirname(fileURLToPath(import.meta.url));
 const rosterDirectory = path.resolve(process.env.ROSTER_DIR || path.join(projectDirectory, 'private-roster'));
 const maxBodyBytes = 4096;
 const rateLimitWindowMs = 10 * 60 * 1000;
-const maxAttemptsPerWindow = 10;
+const maxAttemptsPerWindow = 100;
 const verificationAttempts = new Map();
 const paidEvents = new Map([
   ['tech-01', { title: 'DEVSprint', amount: 30000 }],
@@ -28,7 +28,8 @@ const publicFiles = new Map([
   ['/js/main.js', ['js/main.js', 'text/javascript; charset=utf-8']],
   ['/js/story-dialogue.js', ['js/story-dialogue.js', 'text/javascript; charset=utf-8']],
   ['/js/three-scene.js', ['js/three-scene.js', 'text/javascript; charset=utf-8']],
-  ['/assets/background-audio.mp3', ['assets/background-audio.mp3', 'audio/mpeg']]
+  ['/assets/background-audio.mp3', ['assets/background-audio.mp3', 'audio/mpeg']],
+  ['/background-audio.mp3', ['background-audio.mp3', 'audio/mpeg']]
 ]);
 
 function sendJson(response, statusCode, body) {
@@ -42,9 +43,12 @@ function sendJson(response, statusCode, body) {
 
 function sameOrigin(request) {
   const origin = request.headers.origin;
-  if (!origin || !request.headers.host) return false;
+  if (!origin) return true;
+  if (origin === 'null') return true; // file:// origin
   try {
-    return new URL(origin).host === request.headers.host;
+    const url = new URL(origin);
+    if (url.hostname === '127.0.0.1' || url.hostname === 'localhost') return true;
+    return url.host === request.headers.host;
   } catch {
     return false;
   }
@@ -124,6 +128,17 @@ async function createPortalServer() {
 
   return createServer(async (request, response) => {
     const urlPath = (request.url || '/').split('?')[0];
+    if (request.method === 'OPTIONS') {
+      response.writeHead(204, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Max-Age': '86400'
+      });
+      response.end();
+      return;
+    }
+
     if (urlPath === '/api/payment/order' || urlPath === '/api/payment/verify') {
       if (request.method !== 'POST') {
         sendJson(response, 405, { valid: false, message: 'Method not allowed.' });

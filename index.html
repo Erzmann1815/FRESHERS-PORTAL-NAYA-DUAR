@@ -3162,6 +3162,51 @@
     /* =====================================================================
        4. MAIN APPLICATION ORCHESTRATOR
        ===================================================================== */
+    
+    /* =====================================================================
+       STUDENT ROSTER VALIDATION (SECTION A & SECTION B)
+       Fully self-contained client-side verification
+       ===================================================================== */
+    function normalizeStudentName(value) {
+      return String(value ?? '')
+        .normalize('NFKD')
+        .replace(/\p{M}/gu, '')
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}]/gu, '');
+    }
+
+    function normalizeStudentNumber(value) {
+      return String(value ?? '')
+        .normalize('NFKC')
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, '');
+    }
+
+    function normalizeStudentEmail(value) {
+      return String(value ?? '').normalize('NFKC').trim().toLowerCase();
+    }
+
+    function studentIdentityKey({ name, roll, registrationNo, email }) {
+      const normalizedName = normalizeStudentName(name);
+      const normalizedRoll = normalizeStudentNumber(roll);
+      const normalizedRegistrationNo = normalizeStudentNumber(registrationNo);
+      const normalizedEmail = normalizeStudentEmail(email);
+      if (!normalizedName || !normalizedRoll || !normalizedRegistrationNo || !normalizedEmail) return '';
+      return JSON.stringify([normalizedName, normalizedRoll, normalizedRegistrationNo, normalizedEmail]);
+    }
+
+    const STUDENT_ROSTER_DATA = [["ABHISHEK MEENA","CSE/26001","1651","cse26001@iiitkalyani.ac.in"],["ADITYA KUMAR","CSE/26002","1652","cse26002@iiitkalyani.ac.in"],["ADITYA PRAKASH","CSE/26003","1653","cse26003@iiitkalyani.ac.in"],["AKANKSHA KUMARI","CSE/26004","1654","cse26004@iiitkalyani.ac.in"],["AKANSHA KUMARI","CSE/26005","1655","cse26005@iiitkalyani.ac.in"],["AMAN GUPTA","CSE/26006","1656","cse26006@iiitkalyani.ac.in"],["AMAN PATEL","CSE/26007","1657","cse26007@iiitkalyani.ac.in"],["AMGOTHU YASHWANTH","CSE/26008","1658","cse26008@iiitkalyani.ac.in"],["ANIKET SHAW","CSE/26009","1659","cse26009@iiitkalyani.ac.in"],["ANSHU RANJAN","CSE/26010","1660","cse26010@iiitkalyani.ac.in"],["ANURAG SRIVASTAVA","CSE/26011","1661","cse26011@iiitkalyani.ac.in"],["ANUSKAA GHOSH","CSE/26012","1662","cse26012@iiitkalyani.ac.in"],["ANUTOSH GOSWAMI","CSE/26013","1663","cse26013@iiitkalyani.ac.in"],["APLUT ROY","CSE/26014","1664","cse26014@iiitkalyani.ac.in"],["APURV KUMAR","CSE/26015","1665","cse26015@iiitkalyani.ac.in"],["ARITRA ADAK","CSE/26016","1666","cse26016@iiitkalyani.ac.in"],["ARITRA PAL","CSE/26017","1667","cse26017@iiitkalyani.ac.in"],["ARJUN KUMAR SINGH","CSE/26018","1668","cse26018@iiitkalyani.ac.in"],["ARJUN SARKAR","CSE/26019","1669","cse26019@iiitkalyani.ac.in"],["ASHWIN YADAV","CSE/26020","1670","cse26020@iiitkalyani.ac.in"],["AYONAVA GHOSH","CSE/26021","1671","cse26021@iiitkalyani.ac.in"],["AYUSH ANAND","CSE/26022","1672","cse26022@iiitkalyani.ac.in"],["AYUSH KUMAR","CSE/26023","1673","cse26023@iiitkalyani.ac.in"],["AYUSH PARASHAR","CSE/26024","1674","cse26024@iiitkalyani.ac.in"],["AYUSH RAJ SINGH","CSE/26025","1675","cse26025@iiitkalyani.ac.in"],["BANOTHU SAI BHARGAV","CSE/26026","1676","cse26026@iiitkalyani.ac.in"],["BEDANT MAITY","CSE/26027","1677","cse26027@iiitkalyani.ac.in"],["CHANDRABHAN SINGH","CSE/26028","1678","cse26028@iiitkalyani.ac.in"],["CHAYAN PANDIT","CSE/26029","1679","cse26029@iiitkalyani.ac.in"],["DANNANA DURGA DINESH","CSE/26030","1680","cse26030@iiitkalyani.ac.in"],["DEBADRITA SHEE","CSE/26031","1681","cse26031@iiitkalyani.ac.in"],["DEBARGHA ROY","CSE/26032","1682","cse26032@iiitkalyani.ac.in"],["DEBJYOTI BAIDYA","CSE/26033","1683","cse26033@iiitkalyani.ac.in"],["DEEP KUMAR","CSE/26034","1684","cse26034@iiitkalyani.ac.in"],["DEEPAK KUMAR","CSE/26035","1685","cse26035@iiitkalyani.ac.in"],["DEV AGARWAL","CSE/26036","1686","cse26036@iiitkalyani.ac.in"],["DHARMANA NAVEEN","CSE/26037","1687","cse26037@iiitkalyani.ac.in"],["GEDDAVALASA ROSHANKARTHIK","CSE/26038","1688","cse26038@iiitkalyani.ac.in"],["JOYJIT DEB","CSE/26039","1689","cse26039@iiitkalyani.ac.in"],["KANKANA DEB SIKDAR","CSE/26040","1690","cse26040@iiitkalyani.ac.in"],["KONATHALA SHYAM KUMAR","CSE/26041","1691","cse26041@iiitkalyani.ac.in"],["KOSHIK RAY","CSE/26042","1692","cse26042@iiitkalyani.ac.in"],["KRISHNENDU DAS","CSE/26043","1693","cse26043@iiitkalyani.ac.in"],["KUNAL CHAUDHARY","CSE/26044","1694","cse26044@iiitkalyani.ac.in"],["LIKA KHUTSOH","CSE/26045","1695","cse26045@iiitkalyani.ac.in"],["MADDIMSETTI VIJAYA VENKATA JASWANTH","CSE/26046","1696","cse26046@iiitkalyani.ac.in"],["MAHENDRA KUMAR","CSE/26047","1697","cse26047@iiitkalyani.ac.in"],["MAYANK JOSHI","CSE/26048","1698","cse26048@iiitkalyani.ac.in"],["MOHD HUSAIN HAROON","CSE/26049","1699","cse26049@iiitkalyani.ac.in"],["MONU SHARMA","CSE/26050","1700","cse26050@iiitkalyani.ac.in"],["NARLA SAI SANTHOSH","CSE/26051","1701","cse26051@iiitkalyani.ac.in"],["NAYAN CHABRI","CSE/26052","1702","cse26052@iiitkalyani.ac.in"],["OISHIK DAS","CSE/26053","1703","cse26053@iiitkalyani.ac.in"],["PANDI HIMANTH","CSE/26054","1704","cse26054@iiitkalyani.ac.in"],["PARTH YADAV","CSE/26055","1705","cse26055@iiitkalyani.ac.in"],["PAVAN RAMCHANDRA KOLI","CSE/26056","1706","cse26056@iiitkalyani.ac.in"],["PIYUSH KUMAR","CSE/26057","1707","cse26057@iiitkalyani.ac.in"],["PRAKETH HALLI","CSE/26058","1708","cse26058@iiitkalyani.ac.in"],["PRASHANT RAJ","CSE/26059","1709","cse26059@iiitkalyani.ac.in"],["PRASUN KUMAR","CSE/26060","1710","cse26060@iiitkalyani.ac.in"],["PRATHAM SHARMA","CSE/26061","1711","cse26061@iiitkalyani.ac.in"],["PRITAM GHATAK","CSE/26062","1712","cse26062@iiitkalyani.ac.in"],["RAHUL KUMAR SAINI","CSE/26063","1713","cse26063@iiitkalyani.ac.in"],["RAMIT GHORAI","CSE/26064","1714","cse26064@iiitkalyani.ac.in"],["RANIT PAUL","CSE/26065","1715","cse26065@iiitkalyani.ac.in"],["RAUNAK SARKAR","CSE/26066","1716","cse26066@iiitkalyani.ac.in"],["RAUSHAN RAJ","CSE/26067","1717","cse26067@iiitkalyani.ac.in"],["RAVI RANJAN KUMAR","CSE/26068","1718","cse26068@iiitkalyani.ac.in"],["RISHAV KUMAR","CSE/26069","1719","cse26069@iiitkalyani.ac.in"],["RISHAV SARKAR","CSE/26070","1720","cse26070@iiitkalyani.ac.in"],["RISHIKANT","CSE/26071","1721","cse26071@iiitkalyani.ac.in"],["ROHAN MANDAL","CSE/26072","1722","cse26072@iiitkalyani.ac.in"],["ROHIT RAJ","CSE/26073","1723","cse26073@iiitkalyani.ac.in"],["SACHIN","CSE/26074","1724","cse26074@iiitkalyani.ac.in"],["SAGNIK BHATTACHARJEE","CSE/26075","1725","cse26075@iiitkalyani.ac.in"],["SAINA PAL","CSE/26076","1726","cse26076@iiitkalyani.ac.in"],["SAMADRITA NANDI","CSE/26077","1727","cse26077@iiitkalyani.ac.in"],["SAMRIDDHI PRIYA","CSE/26078","1728","cse26078@iiitkalyani.ac.in"],["SANOJ KUMAR","CSE/26079","1729","cse26079@iiitkalyani.ac.in"],["SANSKAR JAIN","CSE/26080","1730","cse26080@iiitkalyani.ac.in"],["SARGAM MAHESH","CSE/26081","1731","cse26081@iiitkalyani.ac.in"],["SATYAM KUMAR","CSE/26082","1732","cse26082@iiitkalyani.ac.in"],["SAW DEV RAJESH","CSE/26083","1733","cse26083@iiitkalyani.ac.in"],["SAYAN MALLICK","CSE/26084","1734","cse26084@iiitkalyani.ac.in"],["SAYAN MANDAL","CSE/26085","1735","cse26085@iiitkalyani.ac.in"],["SHASHANK KUMAR SHAHI","CSE/26086","1736","cse26086@iiitkalyani.ac.in"],["SHAUNAK MALLIK","CSE/26087","1737","cse26087@iiitkalyani.ac.in"],["SHIVAM SINGH","CSE/26088","1738","cse26088@iiitkalyani.ac.in"],["SHRESTHASINI NAIK","CSE/26089","1739","cse26089@iiitkalyani.ac.in"],["SHREYA KUMARI","CSE/26090","1740","cse26090@iiitkalyani.ac.in"],["SHREYA PATRA","CSE/26091","1741","cse26091@iiitkalyani.ac.in"],["SHUBHADEEP MAJI","CSE/26092","1742","cse26092@iiitkalyani.ac.in"],["SHUBHAM PAL","CSE/26093","1743","cse26093@iiitkalyani.ac.in"],["SHUBODHANAND SHUKLA","CSE/26094","1744","cse26094@iiitkalyani.ac.in"],["SNAHASISH MAJUMDER","CSE/26095","1745","cse26095@iiitkalyani.ac.in"],["SOHAM BOSE","CSE/26096","1746","cse26096@iiitkalyani.ac.in"],["SOHAM ROY","CSE/26097","1747","cse26097@iiitkalyani.ac.in"],["SOMA DAS","CSE/26098","1748","cse26098@iiitkalyani.ac.in"],["SOUMYADEEP MAITY","CSE/26099","1749","cse26099@iiitkalyani.ac.in"],["SOURANIL GHOSH","CSE/26100","1750","cse26100@iiitkalyani.ac.in"],["SRIJAK MAJUMDER","CSE/26101","1751","cse26101@iiitkalyani.ac.in"],["SUBHRAJYOTI DAS","CSE/26102","1752","cse26102@iiitkalyani.ac.in"],["SULOGNA MITRA","CSE/26103","1753","cse26103@iiitkalyani.ac.in"],["SWAPNADIP JANA","CSE/26104","1754","cse26104@iiitkalyani.ac.in"],["TABISH RAHMANI","CSE/26105","1755","cse26105@iiitkalyani.ac.in"],["TANMAY SINGH","CSE/26106","1756","cse26106@iiitkalyani.ac.in"],["VAIBHAV KUMAR TIWARI","CSE/26107","1757","cse26107@iiitkalyani.ac.in"],["VEDANT TRIPATHI","CSE/26108","1758","cse26108@iiitkalyani.ac.in"],["VISHWAJEET KUMAR","CSE/26109","1759","cse26109@iiitkalyani.ac.in"],["YALAMARTHI RAM HITESH","CSE/26110","1760","cse26110@iiitkalyani.ac.in"],["YASH PRATAP SINGH","CSE/26111","1761","cse26111@iiitkalyani.ac.in"],["ABHINANDAN RAJ","CSAI/26112","1762","csai26112@iiitkalyani.ac.in"],["ADITYA AHIRWAR","CSAI/26113","1763","csai26113@iiitkalyani.ac.in"],["ADITYA SAH","CSAI/26114","1764","csai26114@iiitkalyani.ac.in"],["ARKASHMA SEAL","CSAI/26115","1765","csai26115@iiitkalyani.ac.in"],["ATHARV DWIVEDI","CSAI/26116","1766","csai26116@iiitkalyani.ac.in"],["AWNISH MISHRA","CSAI/26117","1767","csai26117@iiitkalyani.ac.in"],["DEBADITYA KARMAKAR","CSAI/26118","1768","csai26118@iiitkalyani.ac.in"],["DIPANSHU","CSAI/26119","1769","csai26119@iiitkalyani.ac.in"],["KOYEL BISWAS","CSAI/26120","1770","csai26120@iiitkalyani.ac.in"],["MEGHADRI GHOSH","CSAI/26121","1771","csai26121@iiitkalyani.ac.in"],["MOHIT TYAGI","CSAI/26122","1772","csai26122@iiitkalyani.ac.in"],["MOYYA RAJESH","CSAI/26123","1773","csai26123@iiitkalyani.ac.in"],["PAKIRA HRIMIT UDDIPAN","CSAI/26124","1774","csai26124@iiitkalyani.ac.in"],["PARIJAT DATTA","CSAI/26125","1775","csai26125@iiitkalyani.ac.in"],["SHRADDHA DAS","CSAI/26126","1776","csai26126@iiitkalyani.ac.in"],["SIRIL SAREN","CSAI/26127","1777","csai26127@iiitkalyani.ac.in"],["SOHAM GAYEN","CSAI/26128","1778","csai26128@iiitkalyani.ac.in"],["SOHAN SAHA","CSAI/26129","1779","csai26129@iiitkalyani.ac.in"],["TANUPRIYA","CSAI/26130","1780","csai26130@iiitkalyani.ac.in"],["VIKASH MANJHI","CSAI/26131","1781","csai26131@iiitkalyani.ac.in"],["VISHESH SAXENA","CSAI/26132","1782","csai26132@iiitkalyani.ac.in"],["AAROSH KARAK","CSCY/26133","1783","cscy26133@iiitkalyani.ac.in"],["ABHINANDAN PAL","CSCY/26134","1784","cscy26134@iiitkalyani.ac.in"],["ABHYA KUMARI","CSCY/26135","1785","cscy26135@iiitkalyani.ac.in"],["AYUSH BHATI","CSCY/26136","1786","cscy26136@iiitkalyani.ac.in"],["BILASH SARKAR","CSCY/26137","1787","cscy26137@iiitkalyani.ac.in"],["BISWARUP CHATTERJEE","CSCY/26138","1788","cscy26138@iiitkalyani.ac.in"],["DINESH","CSCY/26139","1789","cscy26139@iiitkalyani.ac.in"],["DIPTADIP BANERJEE","CSCY/26140","1790","cscy26140@iiitkalyani.ac.in"],["NAVYA SAINI","CSCY/26141","1791","cscy26141@iiitkalyani.ac.in"],["PEEHU SHARMA","CSCY/26142","1792","cscy26142@iiitkalyani.ac.in"],["PUSHKAR PRATAP","CSCY/26143","1793","cscy26143@iiitkalyani.ac.in"],["RAHUL YADAV","CSCY/26144","1794","cscy26144@iiitkalyani.ac.in"],["RAMAN SAINI","CSCY/26145","1795","cscy26145@iiitkalyani.ac.in"],["RAMAVATH RAHUL NAIK","CSCY/26146","1796","cscy26146@iiitkalyani.ac.in"],["SAHYADRI SAHA","CSCY/26147","1797","cscy26147@iiitkalyani.ac.in"],["SUDIPTA DAS","CSCY/26148","1798","cscy26148@iiitkalyani.ac.in"],["TANMOY MAITY","CSCY/26149","1799","cscy26149@iiitkalyani.ac.in"],["YASH MITTAL","CSCY/26150","1800","cscy26150@iiitkalyani.ac.in"],["ABHINAV RAJ","ECE/26153","1803","ece26153@iiitkalyani.ac.in"],["ADITYA JHA","ECE/26154","1804","ece26154@iiitkalyani.ac.in"],["ADITYA KUMAR RAJ","ECE/26155","1805","ece26155@iiitkalyani.ac.in"],["ADITYA PURBEY","ECE/26156","1806","ece26156@iiitkalyani.ac.in"],["ADITYA SINGH","ECE/26157","1807","ece26157@iiitkalyani.ac.in"],["AMIT PRAKASH","ECE/26158","1808","ece26158@iiitkalyani.ac.in"],["ANKAN DHIBAR","ECE/26159","1809","ece26159@iiitkalyani.ac.in"],["ANSHUL RAJ","ECE/26160","1810","ece26160@iiitkalyani.ac.in"],["ANSHUMAAN SHARMA","ECE/26161","1811","ece26161@iiitkalyani.ac.in"],["ANUBRATA ACHARYA","ECE/26162","1812","ece26162@iiitkalyani.ac.in"],["ANUSHKA","ECE/26163","1813","ece26163@iiitkalyani.ac.in"],["APARAJITA GANGULY","ECE/26164","1814","ece26164@iiitkalyani.ac.in"],["ARCHISHMAN BERA","ECE/26165","1815","ece26165@iiitkalyani.ac.in"],["ASHISH KUMAR BAIRWA","ECE/26166","1816","ece26166@iiitkalyani.ac.in"],["ASHUTOSH UPADHYAY","ECE/26167","1817","ece26167@iiitkalyani.ac.in"],["AZMIRA ABHISHEK","ECE/26168","1818","ece26168@iiitkalyani.ac.in"],["BADAVATH LOKESH","ECE/26169","1819","ece26169@iiitkalyani.ac.in"],["BANTUBILLI VARUN KUMAR","ECE/26170","1820","ece26170@iiitkalyani.ac.in"],["EMILI CHATTERJEE","ECE/26171","1821","ece26171@iiitkalyani.ac.in"],["GULLA ABHISEK","ECE/26172","1822","ece26172@iiitkalyani.ac.in"],["INDRAKSHI BHATTACHARYA","ECE/26173","1823","ece26173@iiitkalyani.ac.in"],["JARUPLA NAVADEEP NAYAK","ECE/26174","1824","ece26174@iiitkalyani.ac.in"],["KAMAL SAINI","ECE/26175","1825","ece26175@iiitkalyani.ac.in"],["KINKAR MALLICK","ECE/26176","1826","ece26176@iiitkalyani.ac.in"],["MAHARSHI PAL","ECE/26177","1827","ece26177@iiitkalyani.ac.in"],["MARKALA SAI SHRUJHAN","ECE/26178","1828","ece26178@iiitkalyani.ac.in"],["NAKSHATRA YADAV","ECE/26179","1829","ece26179@iiitkalyani.ac.in"],["PEDDINTI MANIKANTA","ECE/26180","1830","ece26180@iiitkalyani.ac.in"],["PIYUSH KUMAR","ECE/26181","1831","ece26181@iiitkalyani.ac.in"],["POTHANAPALLI KARTHIK VARMA","ECE/26182","1832","ece26182@iiitkalyani.ac.in"],["PRIYAM KUMAR HALDAR","ECE/26183","1833","ece26183@iiitkalyani.ac.in"],["RAAEE KISHORE","ECE/26184","1834","ece26184@iiitkalyani.ac.in"],["ROHAN KUMAR DAS","ECE/26185","1835","ece26185@iiitkalyani.ac.in"],["RUPAL LAKWAL","ECE/26186","1836","ece26186@iiitkalyani.ac.in"],["SAHIL KUMAR","ECE/26187","1837","ece26187@iiitkalyani.ac.in"],["SAKSHAM MISHRA","ECE/26188","1838","ece26188@iiitkalyani.ac.in"],["SATYAM KUMAR SINGH","ECE/26189","1839","ece26189@iiitkalyani.ac.in"],["SAURABH JATAV","ECE/26190","1840","ece26190@iiitkalyani.ac.in"],["SHREYAN PAUL","ECE/26191","1841","ece26191@iiitkalyani.ac.in"],["SHREYANSH TIWARI","ECE/26192","1842","ece26192@iiitkalyani.ac.in"],["SOHOM MONDAL","ECE/26193","1843","ece26193@iiitkalyani.ac.in"],["SOUMYA MAJHI","ECE/26194","1844","ece26194@iiitkalyani.ac.in"],["SOUMYA PRASAD","ECE/26195","1845","ece26195@iiitkalyani.ac.in"],["SOUROJIT SARKAR","ECE/26196","1846","ece26196@iiitkalyani.ac.in"],["SUKESH KUMAR PANDEY","ECE/26197","1847","ece26197@iiitkalyani.ac.in"],["SURAJ KUMAR","ECE/26198","1848","ece26198@iiitkalyani.ac.in"],["TANMAY DAS","ECE/26199","1849","ece26199@iiitkalyani.ac.in"],["TIYAS MISRA","ECE/26200","1850","ece26200@iiitkalyani.ac.in"],["VAISHNAVI KUMARI","ECE/26201","1851","ece26201@iiitkalyani.ac.in"]];
+    const VALID_STUDENT_IDENTITIES = new Set(
+      STUDENT_ROSTER_DATA.map(([name, roll, registrationNo, email]) =>
+        studentIdentityKey({ name, roll, registrationNo, email })
+      )
+    );
+
+    function verifyStudentCredentials({ name, roll, registrationNo, email }) {
+      const key = studentIdentityKey({ name, roll, registrationNo, email });
+      return Boolean(key && VALID_STUDENT_IDENTITIES.has(key));
+    }
+
     class JuniorHubApp {
       constructor() {
         this.scene3D = null;
@@ -3859,7 +3904,7 @@
                 required
                 maxlength="50"
                 value="${this.escapeHTML(this.juniorProfile.name || '')}"
-                placeholder="Enter your name as listed in the student roster"
+                placeholder="Enter your name as listed in the OFFICAL portal"
                 class="w-full bg-black/50 border border-cream-200/20 rounded-xl px-3.5 py-2 text-sm text-cream-50 focus:outline-none focus:border-amber-400"
               />
             </div>
@@ -3885,7 +3930,7 @@
                   id="reg-roll"
                   required
                   maxlength="30"
-                  placeholder="Enter your roll number as listed in the roster"
+                  placeholder="ABC/12345"
                   class="w-full bg-black/50 border border-cream-200/20 rounded-xl px-3.5 py-2 text-sm text-cream-50 focus:outline-none focus:border-amber-400"
                 />
               </div>
@@ -3910,7 +3955,7 @@
                   type="email"
                   id="reg-email"
                   required
-                  placeholder="Enter your registered email ID"
+                  placeholder="abc@iiitkalyani.ac.in"
                   class="w-full bg-black/50 border border-cream-200/20 rounded-xl px-3.5 py-2 text-sm text-cream-50 focus:outline-none focus:border-amber-400"
                 />
               </div>
@@ -3920,7 +3965,7 @@
                   type="tel"
                   id="reg-phone"
                   required
-                  placeholder="+91 9876543210"
+                  placeholder="+91 987XXXX210"
                   class="w-full bg-black/50 border border-cream-200/20 rounded-xl px-3.5 py-2 text-sm text-cream-50 focus:outline-none focus:border-amber-400"
                 />
               </div>
@@ -3961,23 +4006,49 @@
 
         container.querySelector('#junior-reg-form').addEventListener('submit', async (e) => {
           e.preventDefault();
-          const name = container.querySelector('#reg-name').value;
-          const roll = container.querySelector('#reg-roll').value;
-          const registrationNo = container.querySelector('#reg-registration-no').value;
+          const name = container.querySelector('#reg-name').value.trim();
+          const roll = container.querySelector('#reg-roll').value.trim();
+          const registrationNo = container.querySelector('#reg-registration-no').value.trim();
           const branch = container.querySelector('#reg-branch').value;
-          const email = container.querySelector('#reg-email').value;
-          const phone = container.querySelector('#reg-phone').value;
-          const team = container.querySelector('#reg-team').value || 'Solo Participant';
+          const email = container.querySelector('#reg-email').value.trim();
+          const phone = container.querySelector('#reg-phone').value.trim();
+          const team = container.querySelector('#reg-team').value.trim() || 'Solo Participant';
 
-          if (evt.feeAmount > 0) {
-            await this.verifyStudentForPayment(evt, { name, roll, registrationNo, branch, email, phone, team });
-            return;
+          const student = { name, roll, registrationNo, branch, email, phone, team };
+          await this.verifyStudentAndProcess(evt, student);
+        });
+      }
+
+      verifyStudentAndProcess(evt, student) {
+        const errorMessage = document.getElementById('reg-error');
+        if (errorMessage) {
+          errorMessage.textContent = '';
+          errorMessage.classList.add('hidden');
+        }
+
+        const isValid = verifyStudentCredentials({
+          name: student.name,
+          roll: student.roll,
+          registrationNo: student.registrationNo,
+          email: student.email
+        });
+
+        if (!isValid) {
+          if (errorMessage) {
+            errorMessage.textContent = 'Name, roll number, registration number, and email ID do not match. Check all four details and try again.';
+            errorMessage.classList.remove('hidden');
+            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }
+          return;
+        }
 
+        if (evt.feeAmount > 0) {
+          this.showPaymentStep(evt, student);
+        } else {
           const passId = `IIITK-${Math.floor(1000 + Math.random() * 9000)}`;
 
           const newReg = {
-            registrationNo,
+            registrationNo: student.registrationNo,
             passId,
             feeAmount: evt.feeAmount,
             paymentStatus: 'free',
@@ -3986,12 +4057,12 @@
             eventNum: evt.eventNum,
             when: evt.when,
             venue: evt.venue,
-            name,
-            roll,
-            branch,
-            email,
-            phone,
-            team,
+            name: student.name,
+            roll: student.roll,
+            branch: student.branch,
+            email: student.email,
+            phone: student.phone,
+            team: student.team,
             registeredAt: new Date().toLocaleDateString()
           };
 
@@ -4005,38 +4076,14 @@
           this.showTicketConfirmation(newReg, evt);
           this.updateRegistrationBadge();
           this.renderEvents();
-        });
-      }
-
-      async verifyStudentForPayment(evt, student) {
-        const errorMessage = document.getElementById('reg-error');
-        const submitButton = document.querySelector('#junior-reg-form button[type="submit"]');
-        if (errorMessage) {
-          errorMessage.textContent = '';
-          errorMessage.classList.add('hidden');
-        }
-        if (submitButton) {
-          submitButton.disabled = true;
-          submitButton.textContent = 'Checking details…';
-        }
-
-        try {
-        // BYPASS BACKEND: Directly approve the form without a server check
-        this.showPaymentStep(evt, student);
-        return;
-
-        } finally {
-          if (submitButton?.isConnected) {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '<span>Submit Registration</span><span>✓</span>';
-          }
         }
       }
 
       showPaymentStep(evt, student) {
         const modal = document.getElementById('registration-modal');
         const container = document.getElementById('registration-modal-content');
-        if (!container) return;
+        if (!container || !modal) return;
+        this.showModal(modal);
 
         const safeName = this.escapeDialogueText(student.name);
         const safeRoll = this.escapeDialogueText(student.roll);
@@ -4068,65 +4115,71 @@
         if (!payBtn) return;
 
         payBtn.addEventListener('click', async () => {
-        payBtn.disabled = true;
-        try {
+          payBtn.disabled = true;
+          try {
             const rzp = new window.Razorpay({
-                key: 'rzp_test_TrO5UlzLnuazuK', // <-- Paste your public Razorpay Test Key ID here
-                amount: evt.price * 100 || 50000,
-                currency: 'INR',
-                name: 'IIT Kalyani Events',
-                description: evt.title,
-                theme: { color: '#d79a22' },
-                prefill: { 
-                    name: student.name, 
-                    email: student.email, 
-                    contact: student.phone || '' 
-                },
-                handler: async (payment) => {
-                    try {
-                        const newReg = {
-                            id: student.registrationNo,
-                            eventId: evt.id,
-                            eventTitle: evt.title,
-                            studentName: student.name,
-                            studentRoll: student.roll,
-                            paymentId: payment.razorpay_payment_id || `DEMO-${Date.now()}`,
-                            date: new Date().toLocaleDateString()
-                        };
+              key: 'rzp_test_TrO5UlzLnuazuK',
+              amount: (evt.feeAmount || 0) * 100,
+              currency: 'INR',
+              name: 'IIIT Kalyani Events',
+              description: evt.title,
+              theme: { color: '#d79a22' },
+              prefill: { 
+                name: student.name, 
+                email: student.email, 
+                contact: student.phone || '' 
+              },
+              handler: (payment) => {
+                try {
+                  const passId = `IIITK-${Math.floor(1000 + Math.random() * 9000)}`;
+                  const paymentId = payment.razorpay_payment_id || `PAY-${Date.now()}`;
 
-                        // Saves the registration directly to your script's native storage array
-                        if (Array.isArray(this.registrations)) {
-                            this.registrations.push(newReg);
-                            localStorage.setItem('my_registrations', JSON.stringify(this.registrations));
-                        }
+                  const newReg = {
+                    registrationNo: student.registrationNo,
+                    passId,
+                    feeAmount: evt.feeAmount,
+                    paymentStatus: 'paid',
+                    paymentId,
+                    eventId: evt.id,
+                    eventTitle: evt.title,
+                    eventNum: evt.eventNum,
+                    when: evt.when,
+                    venue: evt.venue,
+                    name: student.name,
+                    roll: student.roll,
+                    branch: student.branch,
+                    email: student.email,
+                    phone: student.phone,
+                    team: student.team,
+                    registeredAt: new Date().toLocaleDateString()
+                  };
 
-                        // Hides the active registration form modal panel
-                        const modal = document.getElementById('registration-modal');
-                        if (modal && typeof this.hideModal === 'function') {
-                            this.hideModal(modal);
-                        }
+                  this.registeredEvents.push(newReg);
+                  try {
+                    localStorage.setItem('iiitk_junior_registrations', JSON.stringify(this.registeredEvents));
+                  } catch (error) {
+                    console.warn('Could not save registration in this browser:', error);
+                  }
 
-                        // Instantly runs your app's built-in success screen logic visible on lines 4129+
-                        this.showTicketConfirmation(newReg, evt);
-                        alert("Registration Successful!");
-
-                    } catch (handlerError) {
-                        console.error("Error creating local pass ticket:", handlerError);
-                    } finally {
-                        if (payBtn.isConnected) payBtn.disabled = false;
-                    }
+                  // Instantly display the digital event pass ticket on screen
+                  this.showTicketConfirmation(newReg, evt);
+                  this.updateRegistrationBadge();
+                  this.renderEvents();
+                } catch (handlerError) {
+                  console.error('Error creating local pass ticket:', handlerError);
+                } finally {
+                  if (payBtn.isConnected) payBtn.disabled = false;
                 }
+              }
             });
 
             rzp.open();
-
-        } catch (error) {
+          } catch (error) {
             alert(error.message || 'Razorpay checkout could not be started.');
-        } finally {
+          } finally {
             if (payBtn.isConnected) payBtn.disabled = false;
-        }
-    });
-
+          }
+        });
 
         container.querySelector('#btn-close-pending-payment')?.addEventListener('click', () => this.hideModal(modal));
       }
@@ -4134,7 +4187,8 @@
       showTicketConfirmation(reg, evt) {
         const modal = document.getElementById('registration-modal');
         const container = document.getElementById('registration-modal-content');
-        if (!container) return;
+        if (!container || !modal) return;
+        this.showModal(modal);
         const safeName = this.escapeDialogueText(reg.name);
         const safeRoll = this.escapeDialogueText(reg.roll);
         const safeBranch = this.escapeDialogueText(reg.branch);
@@ -4204,7 +4258,7 @@
 
               <div class="bg-black/60 p-3 rounded-xl flex items-center justify-between text-[10px] text-cream-300/70">
                 <span>Show this pass at gate check-in</span>
-                <span class="font-mono text-amber-400 font-bold">STATUS: FREE ENTRY</span>
+                <span class="font-mono text-amber-400 font-bold">STATUS: ${reg.paymentStatus === 'paid' ? 'PAID &amp; CONFIRMED (' + this.escapeDialogueText(reg.paymentId || 'VERIFIED') + ')' : 'FREE ENTRY'}</span>
               </div>
             </div>
 
@@ -4268,8 +4322,8 @@
                   <p class="text-xs text-cream-300/70 mt-1">📍 ${safe.venue} | 👤 ${safe.name} (${safe.roll})</p>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                  <span class="px-3 py-1 rounded-lg ${safe.paymentStatus === 'free' ? 'bg-amber-500/20 text-amber-300 border-amber-400/30' : 'bg-red-500/15 text-red-300 border-red-400/30'} font-bold text-xs border">
-                    ${safe.paymentStatus === 'free' ? 'Free Pass Active' : 'Verification Required'}
+                  <span class="px-3 py-1 rounded-lg ${safe.paymentStatus === 'free' ? 'bg-amber-500/20 text-amber-300 border-amber-400/30' : safe.paymentStatus === 'paid' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30' : 'bg-red-500/15 text-red-300 border-red-400/30'} font-bold text-xs border">
+                    ${safe.paymentStatus === 'free' ? 'Free Pass Active' : safe.paymentStatus === 'paid' ? 'Pass Active (Paid)' : 'Verification Required'}
                   </span>
                   <button data-idx="${idx}" class="btn-cancel-pass text-xs text-red-400 hover:text-red-300 px-2.5 py-1 rounded border border-red-500/20 hover:bg-red-500/10 transition">
                     Cancel
@@ -4368,7 +4422,7 @@
         // Audio toggle & immediate auto-play
         const audioBtn = document.getElementById('audio-toggle-btn');
         if (this.backgroundAudio) {
-          this.backgroundAudio.volume = 0.35;
+          this.backgroundAudio.volume = 0.5;
           this.audioEnabled = true;
 
           this.backgroundAudio.addEventListener('play', () => {
@@ -4412,23 +4466,14 @@
         if (audioBtn) {
           audioBtn.addEventListener('click', () => {
             gestureEvents.forEach(evt => window.removeEventListener(evt, triggerAudioOnFirstInteraction, { capture: true }));
-            if (this.ambientOscillators.length && this.audioContext) {
-              if (this.audioContext.state === 'running') {
-                this.audioContext.suspend();
-                this.audioEnabled = false;
-                this.updateAudioButton(false);
-              } else {
-                this.audioContext.resume();
-                this.audioEnabled = true;
-                this.updateAudioButton(true);
-              }
-              return;
-            }
             if (!this.backgroundAudio) return;
             if (this.backgroundAudio.paused) {
               this.audioEnabled = true;
-              if (this.audioFileUnavailable) this.startGentleAmbient();
-              else this.playBackgroundAudio();
+              this.audioNeedsGesture = false;
+              if (this.backgroundAudio.error || !this.backgroundAudio.currentSrc) {
+                this.backgroundAudio.load();
+              }
+              this.playBackgroundAudio();
             } else {
               this.audioEnabled = false;
               this.audioNeedsGesture = false;
@@ -4583,7 +4628,6 @@
               this.updateAudioButton(false);
               return;
             }
-            this.audioFileUnavailable = true;
             this.audioEnabled = false;
             this.audioNeedsGesture = true;
             this.updateAudioButton(false);
